@@ -1,6 +1,7 @@
 package com.blog_java.domain.models;
 
 
+import com.blog_java.domain.dtos.user.ClientRegisterDto;
 import com.blog_java.domain.enums.UserRole;
 import jakarta.persistence.*;
 import lombok.*;
@@ -42,7 +43,7 @@ public class User implements UserDetails {
 
     boolean isActive = true;
 
-    public User(String firstName,String lastName, String email, String password, UserRole role) {
+    public User(String firstName, String lastName,String email, String password, UserRole role) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
