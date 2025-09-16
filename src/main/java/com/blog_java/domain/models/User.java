@@ -10,6 +10,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
@@ -20,7 +21,7 @@ import java.util.UUID;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode()
+@EqualsAndHashCode(of = "id")
 public class User implements UserDetails {
     @Id
     private String id = UUID.randomUUID().toString();
@@ -37,6 +38,9 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private String password;
 
+    @Column
+    private List<Long> postIds = new ArrayList<>();
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private UserRole role;
@@ -49,6 +53,11 @@ public class User implements UserDetails {
         this.email = email;
         this.password = password;
         this.role = role;
+    }
+
+    public void addPost(Long postId)
+    {
+        this.postIds.add(postId);
     }
 
     @Override
