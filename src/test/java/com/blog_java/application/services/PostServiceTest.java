@@ -10,7 +10,8 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -74,5 +75,35 @@ public class PostServiceTest {
 
         verify(postRepository, times(0)).save(any());
 
+    }
+
+    @Test
+    @DisplayName("Deveria excluir o post corretamente")
+    void deletePostCase1(){
+        //arrange
+
+        var id = post.getId();
+
+        when(postRepository.findById(any())).thenReturn(Optional.of(post));
+
+        //act
+
+        postService.deletePost(id);
+
+        //assert
+
+        verify(postRepository,times(1)).delete(any());
+    }
+
+    @Test
+    @DisplayName("Não deveria excluir o post corretamente")
+    void deletePostCase2(){
+        //arrange
+
+        var id = 5L; //Id inexistente
+
+        //act & assert
+
+        assertThrows(NullPointerException.class, () -> postService.deletePost(id));
     }
 }
