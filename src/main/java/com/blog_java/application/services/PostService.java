@@ -22,6 +22,11 @@ public class PostService {
     @Transactional
     public Post createPost(PostRegisterDto postRegisterDto){
 
+        if(postRegisterDto.userId() == "" || postRegisterDto.post() == "")
+        {
+            throw new IllegalArgumentException();
+        }
+
         Post post = new Post(postRegisterDto);
 
         return postRepository.save(post);

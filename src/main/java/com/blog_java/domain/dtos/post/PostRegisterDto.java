@@ -1,4 +1,13 @@
 package com.blog_java.domain.dtos.post;
 
-public record PostRegisterDto(String userId, String post) {
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+
+public record PostRegisterDto(
+        @NotBlank
+        @NotNull
+        String userId,
+        @NotBlank
+        @NotNull
+        String post) {
 }
