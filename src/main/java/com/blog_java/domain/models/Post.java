@@ -1,5 +1,6 @@
 package com.blog_java.domain.models;
 
+import com.blog_java.domain.dtos.post.PostRegisterDto;
 import jakarta.persistence.Id;
 import lombok.*;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -23,9 +24,10 @@ public class Post {
 
     private List<Long> commentIds = new ArrayList<>();
 
-    public Post(String userId,String post) {
-        this.userId = userId;
-        this.post = post;
+
+    public Post(PostRegisterDto postRegisterDto) {
+        this.userId = postRegisterDto.userId();
+        this.post = postRegisterDto.post();
     }
 
     public void addComment(Long commentId)
