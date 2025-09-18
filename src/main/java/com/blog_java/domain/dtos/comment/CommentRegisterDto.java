@@ -1,4 +1,14 @@
 package com.blog_java.domain.dtos.comment;
 
-public record CommentRegisterDto(String postId, String comment) {
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
+
+public record CommentRegisterDto(
+        @NotNull
+        @NotBlank
+        String postId,
+        @NotNull
+        @NotBlank
+        String comment) {
 }
