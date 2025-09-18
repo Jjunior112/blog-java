@@ -6,6 +6,8 @@ import com.blog_java.domain.models.Comment;
 import com.blog_java.domain.models.Post;
 import com.blog_java.infra.repositories.CommentRepository;
 import com.blog_java.infra.repositories.PostRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,7 +31,12 @@ public class CommentService {
     @Transactional
     public Comment createComment(CommentRegisterDto commentRegisterDto)
     {
-        Post post =postService.findPostById(commentRegisterDto.postId());
+        if(commentRegisterDto.postId().equals("") || commentRegisterDto.comment().equals(""))
+        {
+            throw new IllegalArgumentException();
+        }
+
+        Post post = postService.findPostById(commentRegisterDto.postId());
 
         Comment comment = new Comment(commentRegisterDto);
 
@@ -40,9 +47,9 @@ public class CommentService {
         return commentRepository.save(comment);
     }
 
-    public List<Comment> findAllComments(Long postId)
+    public Page<Comment> findAllComments(String postId, Pageable pagination)
     {
-        return commentRepository.findAllByPostId(postId);
+        return commentRepository.findAllByPostId(postId,pagination);
     }
 
     public Comment findCommentById(String id)
