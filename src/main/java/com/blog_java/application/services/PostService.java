@@ -22,7 +22,7 @@ public class PostService {
     @Transactional
     public Post createPost(PostRegisterDto postRegisterDto){
 
-        if(postRegisterDto.userId() == "" || postRegisterDto.post() == "")
+        if(postRegisterDto.userId().equals("") || postRegisterDto.post().equals("") )
         {
             throw new IllegalArgumentException();
         }
@@ -37,7 +37,7 @@ public class PostService {
         return postRepository.findAll(pagination);
     }
 
-    public Post findPostById(Long id)
+    public Post findPostById(String id)
     {
         var optionalPost = postRepository.findById(id);
 
@@ -52,16 +52,18 @@ public class PostService {
     }
 
     @Transactional
-    public Post UpdatePostById(Long id, UpdatePostDto updatePostDto)
+    public Post UpdatePostById(String id, UpdatePostDto updatePostDto)
     {
         Post post = findPostById(id);
 
         post.setPost(updatePostDto.post());
 
-        return post;
+
+
+        return postRepository.save(post);
     }
 
-    public void deletePost(Long id)
+    public void deletePost(String id)
     {
         Post post = findPostById(id);
 

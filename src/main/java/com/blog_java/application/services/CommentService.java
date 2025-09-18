@@ -45,7 +45,7 @@ public class CommentService {
         return commentRepository.findAllByPostId(postId);
     }
 
-    public Comment findCommentById(Long id)
+    public Comment findCommentById(String id)
     {
         var optionalComment =  commentRepository.findById(id);
 
@@ -57,7 +57,7 @@ public class CommentService {
     }
 
     @Transactional
-    public Comment updateCommentById(Long id, UpdateCommentDto updateCommentDto)
+    public Comment updateCommentById(String id, UpdateCommentDto updateCommentDto)
     {
         Comment comment =  findCommentById(id);
 
@@ -67,7 +67,7 @@ public class CommentService {
     }
 
     @Transactional
-    public void deleteComment(Long id)
+    public void deleteComment(String id)
     {
         Comment comment = findCommentById(id);
 

@@ -1,0 +1,63 @@
+package com.blog_java.application.controllers;
+
+import com.blog_java.application.services.PostService;
+import com.blog_java.domain.dtos.post.PostListDto;
+import com.blog_java.domain.dtos.post.PostRegisterDto;
+import com.blog_java.domain.dtos.post.UpdatePostDto;
+import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("/post")
+public class PostController {
+
+    private final PostService postService;
+
+    public PostController(PostService postService) {
+        this.postService = postService;
+    }
+    @PostMapping
+    public ResponseEntity<PostListDto> createPost(@RequestBody @Valid PostRegisterDto postRegisterDto)
+    {
+        var response = postService.createPost(postRegisterDto);
+
+        return ResponseEntity.ok(new PostListDto(response));
+    }
+
+    @GetMapping
+    public ResponseEntity<Page<PostListDto>> getAllPost(@PageableDefault(size = 10, sort = {"productName"}) Pageable pagination)
+    {
+        var posts = postService.findAllPosts(pagination).map(PostListDto::new);
+
+        return ResponseEntity.ok(posts);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<PostListDto> getPostById(@PathVariable String id)
+    {
+        var response = postService.findPostById(id);
+
+        return ResponseEntity.ok(new PostListDto(response));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<PostListDto> putPost(@PathVariable String id, @RequestBody UpdatePostDto updatePostDto)
+    {
+        var post = postService.UpdatePostById(id,updatePostDto);
+
+        return ResponseEntity.ok(new PostListDto(post));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity deletePosts(@PathVariable String id)
+    {
+        postService.deletePost(id);
+
+        return ResponseEntity.noContent().build();
+    }
+
+}

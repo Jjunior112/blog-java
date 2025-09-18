@@ -1,6 +1,8 @@
 package com.blog_java.domain.models;
 
 import com.blog_java.domain.dtos.post.PostRegisterDto;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.*;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -16,13 +18,13 @@ import java.util.List;
 @EqualsAndHashCode(of = "id")
 public class Post {
     @Id
-    private Long id;
+    private String id;
 
     private String userId;
 
     private String post;
 
-    private List<Long> commentIds = new ArrayList<>();
+    private List<String> commentIds = new ArrayList<>();
 
 
     public Post(PostRegisterDto postRegisterDto) {
@@ -30,7 +32,7 @@ public class Post {
         this.post = postRegisterDto.post();
     }
 
-    public void addComment(Long commentId)
+    public void addComment(String commentId)
     {
         this.commentIds.add(commentId);
     }

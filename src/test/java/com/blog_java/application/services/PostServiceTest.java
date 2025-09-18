@@ -100,7 +100,7 @@ public class PostServiceTest {
     void deletePostCase2(){
         //arrange
 
-        var id = 5L; //Id inexistente
+        var id = "68cb4e63fcc669726da66045"; //Id inexistente
 
         //act & assert
 

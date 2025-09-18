@@ -1,6 +1,8 @@
 package com.blog_java.domain.models;
 
 import com.blog_java.domain.dtos.comment.CommentRegisterDto;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.*;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -13,9 +15,9 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @EqualsAndHashCode(of = "id")
 public class Comment {
     @Id
-    private Long id;
+    private String id;
 
-    private Long postId;
+    private String postId;
 
     private String comment;
 
