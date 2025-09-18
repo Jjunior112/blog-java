@@ -29,7 +29,12 @@ public class CommentService {
     @Transactional
     public Comment createComment(CommentRegisterDto commentRegisterDto)
     {
-        Post post =postService.findPostById(commentRegisterDto.postId());
+        if(commentRegisterDto.postId().equals("") || commentRegisterDto.comment().equals(""))
+        {
+            throw new IllegalArgumentException();
+        }
+
+        Post post = postService.findPostById(commentRegisterDto.postId());
 
         Comment comment = new Comment(commentRegisterDto);
 
