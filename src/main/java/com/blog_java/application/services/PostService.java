@@ -32,9 +32,9 @@ public class PostService {
         return postRepository.save(post);
     }
 
-    public Page<Post> findAllPosts(Pageable pagination)
+    public Page<Post> findAllPosts(String userId,Pageable pagination)
     {
-        return postRepository.findAll(pagination);
+        return postRepository.findAllByUserId(userId,pagination);
     }
 
     public Post findPostById(String id)

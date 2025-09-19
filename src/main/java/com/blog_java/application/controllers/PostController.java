@@ -31,9 +31,9 @@ public class PostController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<PostListDto>> getAllPost(@PageableDefault(size = 10, sort = {"productName"}) Pageable pagination)
+    public ResponseEntity<Page<PostListDto>> getAllPost(@RequestParam String userId, @PageableDefault(size = 10, sort = {"productName"}) Pageable pagination)
     {
-        var posts = postService.findAllPosts(pagination).map(PostListDto::new);
+        var posts = postService.findAllPosts(userId,pagination).map(PostListDto::new);
 
         return ResponseEntity.ok(posts);
     }
