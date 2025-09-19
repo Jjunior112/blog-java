@@ -4,6 +4,7 @@ import com.blog_java.application.services.PostService;
 import com.blog_java.domain.dtos.post.PostListDto;
 import com.blog_java.domain.dtos.post.PostRegisterDto;
 import com.blog_java.domain.dtos.post.UpdatePostDto;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/post")
+@SecurityRequirement(name = "bearer-key")
 public class PostController {
 
     private final PostService postService;
