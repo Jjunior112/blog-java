@@ -29,8 +29,8 @@ public class CommentController {
         return ResponseEntity.ok(new CommentListDto(response));
     }
 
-    @GetMapping("/{postId}")
-    public ResponseEntity<Page<Comment>> getAllComments(@PathVariable String postId, @PageableDefault(size = 10,sort = {"comment"}) Pageable pagination)
+    @GetMapping
+    public ResponseEntity<Page<Comment>> getAllComments(@RequestParam String postId, @PageableDefault(size = 10,sort = {"comment"}) Pageable pagination)
     {
         var comments = commentService.findAllComments(postId,pagination);
 
@@ -38,7 +38,7 @@ public class CommentController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CommentListDto> getCommentById(String id)
+    public ResponseEntity<CommentListDto> getCommentById(@PathVariable String id)
     {
         var comment = commentService.findCommentById(id);
 
@@ -46,7 +46,7 @@ public class CommentController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<CommentListDto> updateComment(@PathVariable String id, @RequestBody UpdateCommentDto updateCommentDto)
+    public ResponseEntity<CommentListDto> updateComment(@PathVariable String id, @RequestBody @Valid UpdateCommentDto updateCommentDto)
     {
         var comment = commentService.updateCommentById(id,updateCommentDto);
 
