@@ -5,6 +5,7 @@ import com.blog_java.domain.dtos.comment.CommentListDto;
 import com.blog_java.domain.dtos.comment.CommentRegisterDto;
 import com.blog_java.domain.dtos.comment.UpdateCommentDto;
 import com.blog_java.domain.models.Comment;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/comment")
+@SecurityRequirement(name = "bearer-key")
 public class CommentController {
     private final CommentService commentService;
 

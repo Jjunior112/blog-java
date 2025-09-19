@@ -7,6 +7,7 @@ import com.blog_java.domain.dtos.user.JwtDto;
 import com.blog_java.domain.dtos.user.LoginDto;
 import com.blog_java.domain.dtos.user.UserListDto;
 import com.blog_java.domain.models.User;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -52,6 +53,7 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
+    @SecurityRequirement(name = "bearer-key")
     public ResponseEntity<UserListDto> GetUserById(@PathVariable String id)
     {
         var response = userService.findById(id);
