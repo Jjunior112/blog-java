@@ -70,7 +70,7 @@ public class CommentService {
 
         comment.setComment(updateCommentDto.comment());
 
-        return comment;
+        return commentRepository. save(comment);
     }
 
     @Transactional
