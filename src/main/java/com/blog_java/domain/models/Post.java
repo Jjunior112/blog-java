@@ -22,14 +22,22 @@ public class Post {
 
     private String userId;
 
+    private byte[] image = null;
+
+    private String title;
+
     private String post;
 
     private List<String> commentIds = new ArrayList<>();
 
-
     public Post(PostRegisterDto postRegisterDto) {
         this.userId = postRegisterDto.userId();
+        this.title = postRegisterDto.title();
         this.post = postRegisterDto.post();
+        if(postRegisterDto.image()!=null)
+        {
+            this.image = postRegisterDto.image();
+        }
     }
 
     public void addComment(String commentId)
