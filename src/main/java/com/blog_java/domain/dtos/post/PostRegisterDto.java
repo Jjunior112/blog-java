@@ -9,5 +9,9 @@ public record PostRegisterDto(
         String userId,
         @NotBlank
         @NotNull
-        String post) {
+        String title,
+        @NotBlank
+        @NotNull
+        String post,
+        byte[] image) {
 }

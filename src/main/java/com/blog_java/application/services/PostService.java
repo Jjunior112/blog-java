@@ -56,9 +56,20 @@ public class PostService {
     {
         Post post = findPostById(id);
 
-        post.setPost(updatePostDto.post());
+        if(updatePostDto.title()!=null)
+        {
+            post.setTitle(updatePostDto.title());
+        }
 
+        if(updatePostDto.post()!=null)
+        {
+            post.setPost(updatePostDto.post());
+        }
 
+        if(updatePostDto.image()!=null)
+        {
+            post.setImage(updatePostDto.image());
+        }
 
         return postRepository.save(post);
     }
