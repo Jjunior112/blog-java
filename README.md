@@ -73,13 +73,23 @@ Este módulo gerencia operações relacionadas aos posts do blog.
 
 Registra um post no blog atrelado a um usuário. 
 
+***A request deve ser feita usando o tipo Multipart Form**
+
+***A imagem pode ser enviada usando base 64 no parâmetro imageBase64 ou com upload usando o parâmetro image**
+
 #### Request Body
 ```json
-{
-  "userId":"8c90497d-98fe-4a77-8c3a-abe90a519727",
-  "post":"teste"
-}
+
+| Nome         | Tipo | Valor                                  |
+| ------------ | ---- | -------------------------------------- |
+| userId       | Text | 8c90497d-98fe-4a77-8c3a-abe90a519727   |
+| title        | Text | teste com imagem                       |
+| post         | Text | teste                                  |
+| imageBase64  | Text | Base64 (opcional)                      |
+| image        | File | selecione a imagem (opcional)          |
+
 ```
+*caso a imagem não seja fornecida na request, o sistema preenche como null* 
 
 #### `GET` ->`/post?userId=68cb524c3b168b03bd48c22f`
 
@@ -91,13 +101,19 @@ Consulta post especificado por id.
 
 #### `PUT` ->`/post/{id}`
 
-Atuliza informação do post especificado por id.
+Atualiza informação do post especificado por id. sendo todos os parâmetros opcionais e apenas serão atualizados se forem diferente de nulo na request
 
 #### Request Body
+
 ```json
-{
-  "post": "post updated"
-}
+
+| Nome         | Tipo | Valor                                  |
+| ------------ | ---- | -------------------------------------- |
+| title        | Text | title updated                          |
+| post         | Text | post updated                           |
+| imageBase64  | Text | Base64 (opcional)                      |
+| image        | File | selecione a imagem (opcional)          |
+
 ```
 
 #### `DELETE` ->`/post/{id}`

@@ -49,7 +49,7 @@ public class PostServiceTest {
 
         //act
 
-        var result = postService.createPost(postRegisterDto);
+        var result = postService.createPost(postRegisterDto,null);
 
         //assert
 
@@ -69,7 +69,7 @@ public class PostServiceTest {
 
         // act
 
-        assertThrows(IllegalArgumentException.class, () -> postService.createPost(postRegisterDto));
+        assertThrows(IllegalArgumentException.class, () -> postService.createPost(postRegisterDto,null));
 
         //assert
 

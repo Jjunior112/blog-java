@@ -34,9 +34,9 @@ public class Post {
         this.userId = postRegisterDto.userId();
         this.title = postRegisterDto.title();
         this.post = postRegisterDto.post();
-        if(postRegisterDto.image()!=null)
+        if(postRegisterDto.imageBase64()!=null)
         {
-            this.image = postRegisterDto.image();
+            this.image = postRegisterDto.imageBase64();
         }
     }
 

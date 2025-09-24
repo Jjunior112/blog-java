@@ -62,14 +62,15 @@ public class PostControllerTest {
 
         //arrange
 
-        when(postService.createPost(any()))
+        when(postService.createPost(any(),any()))
                 .thenReturn(post);
 
         // act
-
-        var result = mvc.perform(post("/post")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(postRegisterDto)));
+        var result = mvc.perform(multipart("/post")
+                .param("userId",post.getUserId())
+                .param("title", postRegisterDto.title())
+                .param("post", postRegisterDto.post())
+        );
 
         //assert
 
@@ -89,9 +90,11 @@ public class PostControllerTest {
 
         // act
 
-        var result = mvc.perform(post("/post")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(errorDto)));
+        var result = mvc.perform(multipart("/post")
+                .param("userId",post.getUserId())
+                .param("title", errorDto.title())
+                .param("post", errorDto.post())
+        );
 
         //assert
 
@@ -112,20 +115,22 @@ public class PostControllerTest {
 
         postUpdated.setId("68cb4e63fcc669726da66047");
 
-        when(postService.UpdatePostById(eq(id), any(UpdatePostDto.class)))
+        when(postService.UpdatePostById(eq(id), any(UpdatePostDto.class),any()))
                 .thenReturn(post);
 
         // act
-        var result = mvc.perform(put("/post/{id}", id)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(updatePostDto)));
-
+        var result = mvc.perform(multipart("/post/{id}",id)
+                .param("userId",post.getUserId())
+                .param("title", updatePostDto.title())
+                .param("post", updatePostDto.post())
+                .with(request -> { request.setMethod("PUT"); return request; }) // forçar PUT
+        );
         // assert
         result.andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(id))
                 .andExpect(jsonPath("$.post").value("teste"));
 
-        verify(postService, times(1)).UpdatePostById(eq(id), any(UpdatePostDto.class));
+        verify(postService, times(1)).UpdatePostById(eq(id), any(UpdatePostDto.class),any());
     }
 
     @Test
