@@ -31,7 +31,7 @@ public class PostServiceTest {
     @BeforeEach
     void setup()
     {
-        PostRegisterDto postRegisterDto = new PostRegisterDto("66f3e9a4c0b12345abcd6789","teste");
+        PostRegisterDto postRegisterDto = new PostRegisterDto("66f3e9a4c0b12345abcd6789","teste","teste",null);
 
         post = new Post(postRegisterDto);
         MockitoAnnotations.openMocks(this);
@@ -43,7 +43,7 @@ public class PostServiceTest {
     {
         //arrange
 
-        PostRegisterDto postRegisterDto = new PostRegisterDto("66f3e9a4c0b12345abcd6789","teste");
+        PostRegisterDto postRegisterDto = new PostRegisterDto("66f3e9a4c0b12345abcd6789","teste","teste",null);
 
         when(postRepository.save(any())).thenReturn(post);
 
@@ -65,7 +65,7 @@ public class PostServiceTest {
 
         //arrange
 
-        PostRegisterDto postRegisterDto = new PostRegisterDto("66f3e9a4c0b12345abcd6789", "");
+        PostRegisterDto postRegisterDto = new PostRegisterDto("66f3e9a4c0b12345abcd6789", "","",null);
 
         // act
 

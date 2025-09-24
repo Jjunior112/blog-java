@@ -49,7 +49,7 @@ public class PostControllerTest {
     @BeforeEach
     void setup()
     {
-        postRegisterDto = new PostRegisterDto("66f3e9a4c0b12345abcd6789","teste");
+        postRegisterDto = new PostRegisterDto("66f3e9a4c0b12345abcd6789","teste","teste",null);
 
         post = new Post(postRegisterDto);
 
@@ -85,7 +85,7 @@ public class PostControllerTest {
 
         //arrange
 
-        var errorDto = new PostRegisterDto("",null);
+        var errorDto = new PostRegisterDto("","","",null);
 
         // act
 
@@ -104,9 +104,9 @@ public class PostControllerTest {
         // arrange
         String id = "68cb4e63fcc669726da66047";
 
-        UpdatePostDto updatePostDto = new UpdatePostDto("teste");
+        UpdatePostDto updatePostDto = new UpdatePostDto("teste","",null);
 
-        postRegisterDto = new PostRegisterDto("66f3e9a4c0b12345abcd6789","teste");
+        postRegisterDto = new PostRegisterDto("66f3e9a4c0b12345abcd6789","teste","",null);
 
         Post postUpdated = new Post(postRegisterDto);
 
