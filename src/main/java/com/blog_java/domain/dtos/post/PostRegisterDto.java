@@ -13,5 +13,5 @@ public record PostRegisterDto(
         @NotBlank
         @NotNull
         String post,
-        byte[] image) {
+        byte[] imageBase64) {
 }

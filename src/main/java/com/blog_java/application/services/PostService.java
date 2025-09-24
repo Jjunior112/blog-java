@@ -20,7 +20,7 @@ public class PostService {
     }
 
     @Transactional
-    public Post createPost(PostRegisterDto postRegisterDto){
+    public Post createPost(PostRegisterDto postRegisterDto,byte[] image){
 
         if(postRegisterDto.userId().equals("") || postRegisterDto.post().equals("") )
         {
@@ -28,6 +28,12 @@ public class PostService {
         }
 
         Post post = new Post(postRegisterDto);
+
+        if(image!=null)
+        {
+
+            post.setImage(image);
+        }
 
         return postRepository.save(post);
     }
@@ -52,7 +58,7 @@ public class PostService {
     }
 
     @Transactional
-    public Post UpdatePostById(String id, UpdatePostDto updatePostDto)
+    public Post UpdatePostById(String id, UpdatePostDto updatePostDto,byte[] image)
     {
         Post post = findPostById(id);
 
@@ -66,9 +72,14 @@ public class PostService {
             post.setPost(updatePostDto.post());
         }
 
-        if(updatePostDto.image()!=null)
+        if(updatePostDto.imageBase64()!=null)
         {
-            post.setImage(updatePostDto.image());
+            post.setImage(updatePostDto.imageBase64());
+        }
+
+        if(image !=null)
+        {
+            post.setImage(image);
         }
 
         return postRepository.save(post);
