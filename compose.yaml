@@ -1,0 +1,30 @@
+services:
+
+    blog-java:
+        build:
+          context: .
+          dockerfile: Dockerfile
+        container_name: blog-java
+        ports:
+          - 8080:8080
+        networks:
+          - backend
+        depends_on:
+          - mongodb
+        env_file:
+          - .env.development
+        restart: unless-stopped
+    mongodb:
+        image: mongo
+        ports:
+          - 27017:27017
+        env_file:
+          - .env.development
+        environment:
+          - MONGO_INITDB_ROOT_USERNAME=${MONGO_USERNAME}
+          - MONGO_INITDB_ROOT_PASSWORD=${MONGO_PASSWORD}
+        networks:
+          - backend
+networks:
+  backend:
+    driver: bridge
