@@ -32,7 +32,7 @@ public class CommentController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<Comment>> getAllComments(@RequestParam String postId, @PageableDefault(size = 10,sort = {"comment"}) Pageable pagination)
+    public ResponseEntity<Page<Comment>> getAllComments(@RequestParam Long postId, @PageableDefault(size = 10,sort = {"comment"}) Pageable pagination)
     {
         var comments = commentService.findAllComments(postId,pagination);
 
@@ -40,7 +40,7 @@ public class CommentController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CommentListDto> getCommentById(@PathVariable String id)
+    public ResponseEntity<CommentListDto> getCommentById(@PathVariable Long id)
     {
         var comment = commentService.findCommentById(id);
 
@@ -48,7 +48,7 @@ public class CommentController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<CommentListDto> updateComment(@PathVariable String id, @RequestBody @Valid UpdateCommentDto updateCommentDto)
+    public ResponseEntity<CommentListDto> updateComment(@PathVariable Long id, @RequestBody @Valid UpdateCommentDto updateCommentDto)
     {
         var comment = commentService.updateCommentById(id,updateCommentDto);
 
@@ -56,7 +56,7 @@ public class CommentController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity deleteComment(@PathVariable String id)
+    public ResponseEntity deleteComment(@PathVariable Long id)
     {
         commentService.deleteComment(id);
 

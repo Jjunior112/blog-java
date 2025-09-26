@@ -1,13 +1,11 @@
 package com.blog_java.domain.models;
 
 import com.blog_java.domain.dtos.comment.CommentRegisterDto;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.data.mongodb.core.mapping.Document;
-
-@Document
+@Entity
+@Table(name = "comments")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -15,14 +13,18 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @EqualsAndHashCode(of = "id")
 public class Comment {
     @Id
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    private String postId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "post_id", nullable = false)
+    @JsonIgnore
+    private Post post;
 
     private String comment;
 
-    public Comment(CommentRegisterDto commentRegisterDto) {
-        this.postId = commentRegisterDto.postId();
+    public Comment(CommentRegisterDto commentRegisterDto, Post post) {
         this.comment = commentRegisterDto.comment();
+        this.post = post;
     }
 }
