@@ -4,11 +4,16 @@ import com.blog_java.application.services.CommentService;
 import com.blog_java.application.services.TokenService;
 import com.blog_java.application.services.UserService;
 import com.blog_java.domain.dtos.comment.CommentRegisterDto;
+import com.blog_java.domain.dtos.post.PostRegisterDto;
+import com.blog_java.domain.enums.UserRole;
 import com.blog_java.domain.models.Comment;
+import com.blog_java.domain.models.Post;
+import com.blog_java.domain.models.User;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -44,18 +49,35 @@ public class CommentControllerTest {
     @MockBean
     private UserService userService;
 
+    private CommentRegisterDto commentRegisterDto;
+
+    private PostRegisterDto postRegisterDto;
+
     private Comment comment;
 
-    private CommentRegisterDto commentRegisterDto;
+    private Post post;
+
+    private User user;
 
     @BeforeEach
     void setup()
     {
-        commentRegisterDto = new CommentRegisterDto("66f3e9a4c0b12345abcd6789","teste");
 
-        comment = new Comment(commentRegisterDto);
+        user = new User("teste","teste","teste@teste.com","teste", UserRole.CLIENT);
 
-        comment.setId("68cb4e63fcc669726da66047");
+        postRegisterDto = new PostRegisterDto(1L,"teste","teste",null);
+
+        post = new Post(postRegisterDto,user);
+
+        post.setId(1L);
+
+        commentRegisterDto = new CommentRegisterDto(1L,"teste");
+
+        comment = new Comment(commentRegisterDto,post);
+
+        comment.setId(1L);
+
+        MockitoAnnotations.openMocks(this);
     }
 
     @Test
@@ -74,7 +96,7 @@ public class CommentControllerTest {
         //assert
 
         result.andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value("68cb4e63fcc669726da66047"));
+                .andExpect(jsonPath("$.id").value(1L));
     }
 
     @Test
@@ -83,7 +105,7 @@ public class CommentControllerTest {
     void createCommentCase2() throws Exception {
         //arrange
 
-        var errorDto = new CommentRegisterDto("",null);
+        var errorDto = new CommentRegisterDto(1L,null);
 
         //act
 
@@ -101,7 +123,7 @@ public class CommentControllerTest {
 
     void deleteCommentCase1() throws Exception {
         // arrange
-        String id = "68cb4e63fcc669726da66047";
+        Long id = 1L;
 
         doNothing().when(commentService).deleteComment(id);
 
