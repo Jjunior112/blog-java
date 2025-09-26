@@ -1,4 +1,4 @@
-# 📦 Blog Java com armazenamento em MongoDb
+# 📦 Blog Java com armazenamento em PostgreSQL
 
 Este projeto é um blog desenvolvido em Java 21 que permite cadastro de usuários, criação, alteração e exclusão de posts e comentários  
 
