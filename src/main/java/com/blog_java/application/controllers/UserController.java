@@ -14,6 +14,8 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.UUID;
+
 @RestController
 @RequestMapping("/users")
 public class UserController {
@@ -54,7 +56,7 @@ public class UserController {
 
     @GetMapping("/{id}")
     @SecurityRequirement(name = "bearer-key")
-    public ResponseEntity<UserListDto> GetUserById(@PathVariable String id)
+    public ResponseEntity<UserListDto> GetUserById(@PathVariable Long id)
     {
         var response = userService.findById(id);
 

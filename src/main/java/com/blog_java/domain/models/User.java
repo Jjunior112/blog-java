@@ -1,11 +1,9 @@
 package com.blog_java.domain.models;
 
 
-import com.blog_java.domain.dtos.user.ClientRegisterDto;
 import com.blog_java.domain.enums.UserRole;
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.data.annotation.Id;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -13,10 +11,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.UUID;
 
 @Entity
-@Table(name = "Users")
+@Table(name = "users")
 @Getter
 @Setter
 @AllArgsConstructor
@@ -24,7 +21,8 @@ import java.util.UUID;
 @EqualsAndHashCode(of = "id")
 public class User implements UserDetails {
     @Id
-    private String id = UUID.randomUUID().toString();
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @Column(unique = true, nullable = false)
     private String firstName;
@@ -38,8 +36,8 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private String password;
 
-    @Column
-    private List<Long> postIds = new ArrayList<>();
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Post> posts = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -55,9 +53,13 @@ public class User implements UserDetails {
         this.role = role;
     }
 
-    public void addPost(Long postId)
+    public void addPost(Post post)
     {
-        this.postIds.add(postId);
+        this.posts.add(post);
+    }
+    public void removePost(Post post)
+    {
+        this.posts.remove(post);
     }
 
     @Override
