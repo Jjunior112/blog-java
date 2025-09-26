@@ -6,6 +6,5 @@ import jakarta.validation.constraints.NotNull;
 public record UpdateCommentDto(
         @NotBlank
         @NotNull
-
         String comment) {
 }
