@@ -3,11 +3,14 @@ package com.blog_java.application.services;
 import com.blog_java.domain.dtos.post.PostRegisterDto;
 import com.blog_java.domain.dtos.post.UpdatePostDto;
 import com.blog_java.domain.models.Post;
+import com.blog_java.domain.models.User;
 import com.blog_java.infra.repositories.PostRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.UUID;
 
 
 @Service
@@ -15,19 +18,25 @@ public class PostService {
 
     private final PostRepository postRepository;
 
-    public PostService(PostRepository postRepository) {
+    private final UserService userService;
+
+    public PostService(PostRepository postRepository, UserService userService) {
         this.postRepository = postRepository;
+        this.userService = userService;
     }
 
     @Transactional
     public Post createPost(PostRegisterDto postRegisterDto,byte[] image){
 
-        if(postRegisterDto.userId().equals("") || postRegisterDto.post().equals("") )
+        User user = userService.findById(postRegisterDto.userId());
+
+        if(user.equals(null) || postRegisterDto.post().equals("") )
         {
             throw new IllegalArgumentException();
         }
 
-        Post post = new Post(postRegisterDto);
+
+        Post post = new Post(postRegisterDto,user);
 
         if(image!=null)
         {
@@ -38,12 +47,12 @@ public class PostService {
         return postRepository.save(post);
     }
 
-    public Page<Post> findAllPosts(String userId,Pageable pagination)
+    public Page<Post> findAllPosts(Long userId, Pageable pagination)
     {
         return postRepository.findAllByUserId(userId,pagination);
     }
 
-    public Post findPostById(String id)
+    public Post findPostById(Long id)
     {
         var optionalPost = postRepository.findById(id);
 
@@ -58,7 +67,7 @@ public class PostService {
     }
 
     @Transactional
-    public Post UpdatePostById(String id, UpdatePostDto updatePostDto,byte[] image)
+    public Post UpdatePostById(Long id, UpdatePostDto updatePostDto,byte[] image)
     {
         Post post = findPostById(id);
 
@@ -85,7 +94,7 @@ public class PostService {
         return postRepository.save(post);
     }
 
-    public void deletePost(String id)
+    public void deletePost(Long id)
     {
         Post post = findPostById(id);
 
