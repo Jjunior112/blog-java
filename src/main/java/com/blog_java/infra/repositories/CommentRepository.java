@@ -3,10 +3,8 @@ package com.blog_java.infra.repositories;
 import com.blog_java.domain.models.Comment;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.List;
-
-public interface CommentRepository extends MongoRepository<Comment, String> {
-    Page<Comment> findAllByPostId(String postId, Pageable pagination);
+public interface CommentRepository extends JpaRepository<Comment, Long> {
+    Page<Comment> findAllByPostId(Long postId, Pageable pagination);
 }

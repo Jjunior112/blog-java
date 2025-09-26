@@ -3,8 +3,11 @@ package com.blog_java.application.services;
 
 import com.blog_java.domain.dtos.comment.CommentRegisterDto;
 import com.blog_java.domain.dtos.post.PostRegisterDto;
+import com.blog_java.domain.dtos.user.ClientRegisterDto;
+import com.blog_java.domain.enums.UserRole;
 import com.blog_java.domain.models.Comment;
 import com.blog_java.domain.models.Post;
+import com.blog_java.domain.models.User;
 import com.blog_java.infra.repositories.CommentRepository;
 import com.blog_java.infra.repositories.PostRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,6 +16,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.security.core.parameters.P;
 
 import java.util.Optional;
 
@@ -36,20 +40,31 @@ public class CommentServiceTest {
 
     private CommentRegisterDto commentRegisterDto;
 
+    private PostRegisterDto postRegisterDto;
+
     private Comment comment;
 
     private Post post;
 
+    private User user;
+
     @BeforeEach
     void setup()
     {
-         commentRegisterDto = new CommentRegisterDto("66f3e9a4c0b12345abcd6789","teste");
 
-        comment = new Comment(commentRegisterDto);
+        user = new User("teste","teste","teste@teste.com","teste", UserRole.CLIENT);
 
-        PostRegisterDto postRegisterDto = new PostRegisterDto("66f3e9a4c0b12345abcd6789","teste","",null);
+        postRegisterDto = new PostRegisterDto(1L,"teste","teste",null);
 
-        post = new Post(postRegisterDto);
+        post = new Post(postRegisterDto,user);
+
+        post.setId(1L);
+
+        commentRegisterDto = new CommentRegisterDto(1L,"teste");
+
+        comment = new Comment(commentRegisterDto,post);
+
+        comment.setId(1L);
 
         MockitoAnnotations.openMocks(this);
     }
@@ -83,7 +98,7 @@ public class CommentServiceTest {
         when(commentRepository.save(any())).thenReturn(comment);
 
 
-        var errorDto = new CommentRegisterDto("", null);
+        var errorDto = new CommentRegisterDto(1L, "");
         // act
 
         assertThrows(IllegalArgumentException.class, () -> commentService.createComment(errorDto));
@@ -116,7 +131,7 @@ public class CommentServiceTest {
     void deleteCommentCase2(){
         //arrange
 
-        var id = "68cb4e63fcc669726da66045"; //Id inexistente
+        var id = 5L; //Id inexistente
 
         //act & assert
 

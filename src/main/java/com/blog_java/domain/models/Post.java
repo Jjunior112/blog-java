@@ -1,16 +1,15 @@
 package com.blog_java.domain.models;
 
 import com.blog_java.domain.dtos.post.PostRegisterDto;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
-@Document
+@Entity
+@Table(name = "posts")
 @Getter
 @Setter
 @AllArgsConstructor
@@ -18,20 +17,25 @@ import java.util.List;
 @EqualsAndHashCode(of = "id")
 public class Post {
     @Id
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    private String userId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false) // cria a FK em posts
+    private User user;
 
+    @Lob
     private byte[] image = null;
 
     private String title;
 
     private String post;
 
-    private List<String> commentIds = new ArrayList<>();
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Comment> comments = new ArrayList<>();
 
-    public Post(PostRegisterDto postRegisterDto) {
-        this.userId = postRegisterDto.userId();
+    public Post(PostRegisterDto postRegisterDto, User user) {
+        this.user = user;
         this.title = postRegisterDto.title();
         this.post = postRegisterDto.post();
         if(postRegisterDto.imageBase64()!=null)
@@ -40,8 +44,14 @@ public class Post {
         }
     }
 
-    public void addComment(String commentId)
-    {
-        this.commentIds.add(commentId);
+    public void addComment(Comment comment) {
+        comments.add(comment);
+        comment.setPost(this);
     }
+
+    public void removeComment(Comment comment) {
+        comments.remove(comment);
+        comment.setPost(null);
+    }
+
 }

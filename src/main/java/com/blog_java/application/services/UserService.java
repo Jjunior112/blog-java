@@ -11,6 +11,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.UUID;
+
 @Service
 public class UserService implements UserDetailsService {
 
@@ -43,7 +45,7 @@ public class UserService implements UserDetailsService {
         return userRepository.save(user);
     }
 
-    public User findById(String id) {
+    public User findById(Long id) {
         var user = userRepository.findById(id);
 
         if(user.isEmpty())

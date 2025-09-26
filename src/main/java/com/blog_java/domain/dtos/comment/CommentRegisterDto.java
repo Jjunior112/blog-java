@@ -6,8 +6,7 @@ import jakarta.validation.constraints.Pattern;
 
 public record CommentRegisterDto(
         @NotNull
-        @NotBlank
-        String postId,
+        Long postId,
         @NotNull
         @NotBlank
         String comment) {

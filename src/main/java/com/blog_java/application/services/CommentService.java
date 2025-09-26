@@ -11,7 +11,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 
 @Service
 public class CommentService {
@@ -38,21 +37,19 @@ public class CommentService {
 
         Post post = postService.findPostById(commentRegisterDto.postId());
 
-        Comment comment = new Comment(commentRegisterDto);
+        Comment comment = new Comment(commentRegisterDto,post);
 
-        post.addComment(comment.getId());
-
-        postRepository.save(post);
+        post.addComment(comment);
 
         return commentRepository.save(comment);
     }
 
-    public Page<Comment> findAllComments(String postId, Pageable pagination)
+    public Page<Comment> findAllComments(Long postId, Pageable pagination)
     {
         return commentRepository.findAllByPostId(postId,pagination);
     }
 
-    public Comment findCommentById(String id)
+    public Comment findCommentById(Long id)
     {
         var optionalComment =  commentRepository.findById(id);
 
@@ -64,7 +61,7 @@ public class CommentService {
     }
 
     @Transactional
-    public Comment updateCommentById(String id, UpdateCommentDto updateCommentDto)
+    public Comment updateCommentById(Long id, UpdateCommentDto updateCommentDto)
     {
         Comment comment =  findCommentById(id);
 
@@ -74,7 +71,7 @@ public class CommentService {
     }
 
     @Transactional
-    public void deleteComment(String id)
+    public void deleteComment(Long id)
     {
         Comment comment = findCommentById(id);
 

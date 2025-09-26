@@ -1,9 +1,14 @@
 package com.blog_java.application.services;
 
 
+import com.blog_java.domain.dtos.comment.CommentRegisterDto;
 import com.blog_java.domain.dtos.post.PostRegisterDto;
+import com.blog_java.domain.enums.UserRole;
+import com.blog_java.domain.models.Comment;
 import com.blog_java.domain.models.Post;
+import com.blog_java.domain.models.User;
 import com.blog_java.infra.repositories.PostRepository;
+import com.blog_java.infra.repositories.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -23,27 +28,52 @@ public class PostServiceTest {
     @Mock
     private PostRepository postRepository;
 
+    @Mock
+    private UserService userService;
+
     @InjectMocks
     private PostService postService;
 
+    private CommentRegisterDto commentRegisterDto;
+
+    private PostRegisterDto postRegisterDto;
+
+    private Comment comment;
+
     private Post post;
+
+    private User user;
 
     @BeforeEach
     void setup()
     {
-        PostRegisterDto postRegisterDto = new PostRegisterDto("66f3e9a4c0b12345abcd6789","teste","teste",null);
+        user = new User("teste","teste","teste@teste.com","teste", UserRole.CLIENT);
 
-        post = new Post(postRegisterDto);
+        user.setId(1L);
+
+        postRegisterDto = new PostRegisterDto(1L,"teste","teste",null);
+
+        post = new Post(postRegisterDto,user);
+
+        post.setId(1L);
+
+        commentRegisterDto = new CommentRegisterDto(1L,"teste");
+
+        comment = new Comment(commentRegisterDto,post);
+
+        comment.setId(1L);
+
         MockitoAnnotations.openMocks(this);
     }
-
     @Test
     @DisplayName("Deveria criar o post corretamente")
     void createPostCase1()
     {
         //arrange
 
-        PostRegisterDto postRegisterDto = new PostRegisterDto("66f3e9a4c0b12345abcd6789","teste","teste",null);
+        PostRegisterDto postRegisterDto = new PostRegisterDto(1L,"teste","teste",null);
+
+        when(userService.findById(any())).thenReturn(user);
 
         when(postRepository.save(any())).thenReturn(post);
 
@@ -65,7 +95,9 @@ public class PostServiceTest {
 
         //arrange
 
-        PostRegisterDto postRegisterDto = new PostRegisterDto("66f3e9a4c0b12345abcd6789", "","",null);
+        PostRegisterDto postRegisterDto = new PostRegisterDto(1L, "","",null);
+
+        when(userService.findById(any())).thenReturn(user);
 
         // act
 
@@ -76,6 +108,27 @@ public class PostServiceTest {
         verify(postRepository, times(0)).save(any());
 
     }
+
+    @Test
+    @DisplayName("Não deveria criar o post corretamente ao enviar usuario nulo")
+    void createPostCase3()
+    {
+
+        //arrange
+
+        PostRegisterDto postRegisterDto = new PostRegisterDto(null, "","",null);
+
+
+        // act
+
+        assertThrows(NullPointerException.class, () -> postService.createPost(postRegisterDto,null));
+
+        //assert
+
+        verify(postRepository, times(0)).save(any());
+
+    }
+
 
     @Test
     @DisplayName("Deveria excluir o post corretamente")
@@ -100,7 +153,7 @@ public class PostServiceTest {
     void deletePostCase2(){
         //arrange
 
-        var id = "68cb4e63fcc669726da66045"; //Id inexistente
+        var id = 5L; //Id inexistente
 
         //act & assert
 

@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/post")
@@ -37,7 +38,7 @@ public class PostController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<PostListDto>> getAllPost(@RequestParam String userId, @PageableDefault(size = 10, sort = {"title"}) Pageable pagination)
+    public ResponseEntity<Page<PostListDto>> getAllPost(@RequestParam Long userId, @PageableDefault(size = 10, sort = {"title"}) Pageable pagination)
     {
         var posts = postService.findAllPosts(userId,pagination).map(PostListDto::new);
 
@@ -45,7 +46,7 @@ public class PostController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<PostListDto> getPostById(@PathVariable String id)
+    public ResponseEntity<PostListDto> getPostById(@PathVariable Long id)
     {
         var response = postService.findPostById(id);
 
@@ -53,7 +54,7 @@ public class PostController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<PostListDto> putPost(@PathVariable String id, @ModelAttribute UpdatePostDto updatePostDto,@RequestPart(value = "image", required = false) MultipartFile image) throws IOException {
+    public ResponseEntity<PostListDto> putPost(@PathVariable Long id, @ModelAttribute UpdatePostDto updatePostDto,@RequestPart(value = "image", required = false) MultipartFile image) throws IOException {
         byte[] imageBytes = (image!=null)? image.getBytes() : null;
 
         var post = postService.UpdatePostById(id,updatePostDto,imageBytes);
@@ -62,7 +63,7 @@ public class PostController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity deletePosts(@PathVariable String id)
+    public ResponseEntity deletePosts(@PathVariable Long id)
     {
         postService.deletePost(id);
 

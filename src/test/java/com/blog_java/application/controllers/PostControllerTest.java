@@ -3,13 +3,18 @@ package com.blog_java.application.controllers;
 import com.blog_java.application.services.PostService;
 import com.blog_java.application.services.TokenService;
 import com.blog_java.application.services.UserService;
+import com.blog_java.domain.dtos.comment.CommentRegisterDto;
 import com.blog_java.domain.dtos.post.PostRegisterDto;
 import com.blog_java.domain.dtos.post.UpdatePostDto;
+import com.blog_java.domain.enums.UserRole;
+import com.blog_java.domain.models.Comment;
 import com.blog_java.domain.models.Post;
+import com.blog_java.domain.models.User;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -42,19 +47,37 @@ public class PostControllerTest {
     @MockBean
     private UserService userService;
 
-    private Post post;
+    private CommentRegisterDto commentRegisterDto;
 
     private PostRegisterDto postRegisterDto;
+
+    private Comment comment;
+
+    private Post post;
+
+    private User user;
 
     @BeforeEach
     void setup()
     {
-        postRegisterDto = new PostRegisterDto("66f3e9a4c0b12345abcd6789","teste","teste",null);
 
-        post = new Post(postRegisterDto);
+        user = new User("teste","teste","teste@teste.com","teste", UserRole.CLIENT);
 
-        post.setId("68cb4e63fcc669726da66047");
+        postRegisterDto = new PostRegisterDto(1L,"teste","teste",null);
+
+        post = new Post(postRegisterDto,user);
+
+        post.setId(1L);
+
+        commentRegisterDto = new CommentRegisterDto(1L,"teste");
+
+        comment = new Comment(commentRegisterDto,post);
+
+        comment.setId(1L);
+
+        MockitoAnnotations.openMocks(this);
     }
+
     @Test
     @DisplayName("Deve criar o post ao enviar dados corretamente ")
     @WithMockUser
@@ -67,7 +90,7 @@ public class PostControllerTest {
 
         // act
         var result = mvc.perform(multipart("/post")
-                .param("userId",post.getUserId())
+                .param("userId","1")
                 .param("title", postRegisterDto.title())
                 .param("post", postRegisterDto.post())
         );
@@ -75,7 +98,7 @@ public class PostControllerTest {
         //assert
 
         result.andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value("68cb4e63fcc669726da66047"));
+                .andExpect(jsonPath("$.id").value(1L));
 
     }
 
@@ -86,12 +109,12 @@ public class PostControllerTest {
 
         //arrange
 
-        var errorDto = new PostRegisterDto("","","",null);
+        var errorDto = new PostRegisterDto(1L,"","",null);
 
         // act
 
         var result = mvc.perform(multipart("/post")
-                .param("userId",post.getUserId())
+                .param("userId","")
                 .param("title", errorDto.title())
                 .param("post", errorDto.post())
         );
@@ -105,22 +128,21 @@ public class PostControllerTest {
     @DisplayName("Deveria atualizar o post corretamente")
     void putPostCase1() throws Exception {
         // arrange
-        String id = "68cb4e63fcc669726da66047";
+        Long id = 1L;
 
         UpdatePostDto updatePostDto = new UpdatePostDto("teste","",null);
 
-        postRegisterDto = new PostRegisterDto("66f3e9a4c0b12345abcd6789","teste","",null);
+        postRegisterDto = new PostRegisterDto(1L,"teste","",null);
 
-        Post postUpdated = new Post(postRegisterDto);
+        Post postUpdated = new Post(postRegisterDto,user);
 
-        postUpdated.setId("68cb4e63fcc669726da66047");
+        postUpdated.setId(1L);
 
         when(postService.UpdatePostById(eq(id), any(UpdatePostDto.class),any()))
                 .thenReturn(post);
 
         // act
         var result = mvc.perform(multipart("/post/{id}",id)
-                .param("userId",post.getUserId())
                 .param("title", updatePostDto.title())
                 .param("post", updatePostDto.post())
                 .with(request -> { request.setMethod("PUT"); return request; }) // forçar PUT
@@ -138,7 +160,7 @@ public class PostControllerTest {
     @WithMockUser
     void deletePostCase1() throws Exception {
         // arrange
-        String id = "68cb4e63fcc669726da66047";
+        Long id = 1L;
 
         doNothing().when(postService).deletePost(id);
 
