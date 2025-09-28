@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/post")
@@ -65,7 +64,7 @@ public class PostController {
     public ResponseEntity<PostListDto> putPost(@PathVariable Long id, @ModelAttribute UpdatePostDto updatePostDto,@RequestPart(value = "image", required = false) MultipartFile image) throws IOException {
         byte[] imageBytes = (image!=null)? image.getBytes() : null;
 
-        var post = postService.UpdatePostById(id,updatePostDto,imageBytes);
+        var post = postService.updatePostById(id,updatePostDto,imageBytes);
 
         return ResponseEntity.ok(new PostListDto(post));
     }
