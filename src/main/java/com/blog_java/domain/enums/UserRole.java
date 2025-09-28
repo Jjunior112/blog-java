@@ -2,7 +2,8 @@ package com.blog_java.domain.enums;
 
 public enum UserRole {
     ADMIN("ROLE_ADMIN"),
-    CLIENT("ROLE_CLIENT");
+    USER("ROLE_USER"),
+    MODERATOR("ROLE_MODERATOR");
     private final String role;
 
     UserRole(String role) {

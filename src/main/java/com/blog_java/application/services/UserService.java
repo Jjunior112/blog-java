@@ -1,6 +1,6 @@
 package com.blog_java.application.services;
 
-import com.blog_java.domain.dtos.user.ClientRegisterDto;
+import com.blog_java.domain.dtos.user.UserRegisterDto;
 import com.blog_java.domain.enums.UserRole;
 import com.blog_java.domain.models.User;
 import com.blog_java.infra.repositories.UserRepository;
@@ -10,8 +10,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.UUID;
 
 @Service
 public class UserService implements UserDetailsService {
@@ -31,16 +29,46 @@ public class UserService implements UserDetailsService {
     }
 
     @Transactional
-    public User createClientUser(ClientRegisterDto clientRegisterDto)
+    public User createUser(UserRegisterDto userRegisterDto)
     {
-        if(userRepository.findByEmail(clientRegisterDto.email() )!= null)
+        if(userRepository.findByEmail(userRegisterDto.email() )!= null)
         {
             throw new IllegalArgumentException("E-mail already exists");
         }
 
-        String encryptedPassword = passwordEncoder.encode(clientRegisterDto.password());
+        String encryptedPassword = passwordEncoder.encode(userRegisterDto.password());
 
-        User user = new User(clientRegisterDto.firstName(),clientRegisterDto.lastName(), clientRegisterDto.email(),encryptedPassword, UserRole.CLIENT);
+        User user = new User(userRegisterDto.firstName(), userRegisterDto.lastName(), userRegisterDto.email(),encryptedPassword, UserRole.USER);
+
+        return userRepository.save(user);
+    }
+
+    @Transactional
+    public User createUserAdmin(UserRegisterDto userRegisterDto)
+    {
+        if(userRepository.findByEmail(userRegisterDto.email() )!= null)
+        {
+            throw new IllegalArgumentException("E-mail already exists");
+        }
+
+        String encryptedPassword = passwordEncoder.encode(userRegisterDto.password());
+
+        User user = new User(userRegisterDto.firstName(), userRegisterDto.lastName(), userRegisterDto.email(),encryptedPassword, UserRole.ADMIN);
+
+        return userRepository.save(user);
+    }
+
+    @Transactional
+    public User createUserModerator(UserRegisterDto userRegisterDto)
+    {
+        if(userRepository.findByEmail(userRegisterDto.email() )!= null)
+        {
+            throw new IllegalArgumentException("E-mail already exists");
+        }
+
+        String encryptedPassword = passwordEncoder.encode(userRegisterDto.password());
+
+        User user = new User(userRegisterDto.firstName(), userRegisterDto.lastName(), userRegisterDto.email(),encryptedPassword, UserRole.MODERATOR);
 
         return userRepository.save(user);
     }
@@ -56,6 +84,12 @@ public class UserService implements UserDetailsService {
         var userEntity = user.get();
 
         return userEntity;
+    }
+
+    public boolean existUser(String email) {
+        var user = userRepository.findByEmail(email);
+
+        return user != null;
     }
 
 
