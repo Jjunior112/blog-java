@@ -73,7 +73,7 @@ public class CommentControllerTest {
 
         commentRegisterDto = new CommentRegisterDto(1L,"teste");
 
-        comment = new Comment(commentRegisterDto,post);
+        comment = new Comment(commentRegisterDto,post,user);
 
         comment.setId(1L);
 

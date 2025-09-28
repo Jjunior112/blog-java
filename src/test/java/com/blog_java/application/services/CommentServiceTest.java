@@ -15,6 +15,9 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.Optional;
 
@@ -32,6 +35,8 @@ public class CommentServiceTest {
 
     @Mock
     private PostService postService;
+    @Mock
+    private UserService userService;
 
     @InjectMocks
     private CommentService commentService;
@@ -52,6 +57,8 @@ public class CommentServiceTest {
 
         user = new User("teste","teste","teste@teste.com","teste", UserRole.USER);
 
+        user.setId(1L);
+
         postRegisterDto = new PostRegisterDto(1L,"teste","teste",null);
 
         post = new Post(postRegisterDto,user);
@@ -60,7 +67,7 @@ public class CommentServiceTest {
 
         commentRegisterDto = new CommentRegisterDto(1L,"teste");
 
-        comment = new Comment(commentRegisterDto,post);
+        comment = new Comment(commentRegisterDto,post,user);
 
         comment.setId(1L);
 
@@ -71,18 +78,23 @@ public class CommentServiceTest {
     @DisplayName("Deve criar o comentário corretamente")
     void createCommentCase1() {
         // arrange
-
         when(postService.findPostById(any())).thenReturn(post);
-        when(commentRepository.save(any())).thenReturn(comment);
+        when(commentRepository.save(any(Comment.class))).thenReturn(comment);
+
+        // Simula usuário autenticado no SecurityContext
+        User user = new User();
+        user.setId(1L);
+        Authentication auth = mock(Authentication.class);
+        when(auth.getPrincipal()).thenReturn(user);
+        SecurityContext securityContext = mock(SecurityContext.class);
+        when(securityContext.getAuthentication()).thenReturn(auth);
+        SecurityContextHolder.setContext(securityContext);
 
         // act
-
-        var result = commentService.createComment(commentRegisterDto);
+        Comment result = commentService.createComment(commentRegisterDto);
 
         // assert
-
-        verify(commentRepository, times(1)).save(any());
-
+        verify(commentRepository, times(1)).save(any(Comment.class));
         assertEquals(comment.getId(), result.getId());
         assertEquals("teste", result.getComment());
     }
@@ -106,22 +118,36 @@ public class CommentServiceTest {
         verify(commentRepository, times(0)).save(any());
 
     }
+
     @Test
     @DisplayName("Deveria excluir o comentário corretamente")
-    void deleteCommentCase1(){
-        //arrange
+    void deleteCommentCase1() {
+        // Arrange
+        Long id = comment.getId();
 
-        var id = comment.getId();
+        when(commentRepository.findById(anyLong())).thenReturn(Optional.of(comment));
 
-        when(commentRepository.findById(any())).thenReturn(Optional.of(comment));
+        // Cria um usuário dono do comentário
+        User user = new User();
+        user.setId(comment.getUser().getId()); // garante que é o dono
+        user.setRole(UserRole.USER); // role normal
 
-        //act
+        // Mocka o SecurityContextHolder
+        Authentication authentication = mock(Authentication.class);
+        when(authentication.getPrincipal()).thenReturn(user);
 
+        SecurityContext securityContext = mock(SecurityContext.class);
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+        SecurityContextHolder.setContext(securityContext);
+
+        // Act
         commentService.deleteComment(id);
 
-        //assert
+        // Assert
+        verify(commentRepository, times(1)).delete(comment);
 
-        verify(commentRepository,times(1)).delete(any());
+        // Limpa o SecurityContext
+        SecurityContextHolder.clearContext();
     }
 
     @Test

@@ -15,6 +15,9 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.Optional;
 
@@ -59,7 +62,7 @@ public class PostServiceTest {
 
         commentRegisterDto = new CommentRegisterDto(1L,"teste");
 
-        comment = new Comment(commentRegisterDto,post);
+        comment = new Comment(commentRegisterDto,post,user);
 
         comment.setId(1L);
 
@@ -118,10 +121,9 @@ public class PostServiceTest {
 
         PostRegisterDto postRegisterDto = new PostRegisterDto(null, "","",null);
 
-
         // act
 
-        assertThrows(NullPointerException.class, () -> postService.createPost(postRegisterDto,null));
+        assertThrows(IllegalArgumentException.class, () -> postService.createPost(postRegisterDto,null));
 
         //assert
 
@@ -132,20 +134,34 @@ public class PostServiceTest {
 
     @Test
     @DisplayName("Deveria excluir o post corretamente")
-    void deletePostCase1(){
-        //arrange
-
+    void deletePostCase1() {
+        // Arrange
         var id = post.getId();
 
+        // Mocka o repositório
         when(postRepository.findById(any())).thenReturn(Optional.of(post));
 
-        //act
+        // Cria um usuário dono do post
+        User user = new User();
+        user.setId(post.getUser().getId());
+        user.setRole(UserRole.USER); // role normal, dono do post
 
+        // Mocka o SecurityContextHolder
+        Authentication authentication = mock(Authentication.class);
+        when(authentication.getPrincipal()).thenReturn(user);
+
+        SecurityContext securityContext = mock(SecurityContext.class);
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+        SecurityContextHolder.setContext(securityContext);
+
+        // Act
         postService.deletePost(id);
 
-        //assert
+        // Assert
+        verify(postRepository, times(1)).delete(post);
 
-        verify(postRepository,times(1)).delete(any());
+        // Limpa o SecurityContext para outros testes
+        SecurityContextHolder.clearContext();
     }
 
     @Test
