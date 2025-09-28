@@ -3,7 +3,6 @@ package com.blog_java.application.services;
 
 import com.blog_java.domain.dtos.comment.CommentRegisterDto;
 import com.blog_java.domain.dtos.post.PostRegisterDto;
-import com.blog_java.domain.dtos.user.ClientRegisterDto;
 import com.blog_java.domain.enums.UserRole;
 import com.blog_java.domain.models.Comment;
 import com.blog_java.domain.models.Post;
@@ -16,7 +15,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.security.core.parameters.P;
 
 import java.util.Optional;
 
@@ -52,7 +50,7 @@ public class CommentServiceTest {
     void setup()
     {
 
-        user = new User("teste","teste","teste@teste.com","teste", UserRole.CLIENT);
+        user = new User("teste","teste","teste@teste.com","teste", UserRole.USER);
 
         postRegisterDto = new PostRegisterDto(1L,"teste","teste",null);
 

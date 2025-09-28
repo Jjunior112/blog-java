@@ -47,7 +47,7 @@ public class PostServiceTest {
     @BeforeEach
     void setup()
     {
-        user = new User("teste","teste","teste@teste.com","teste", UserRole.CLIENT);
+        user = new User("teste","teste","teste@teste.com","teste", UserRole.USER);
 
         user.setId(1L);
 
