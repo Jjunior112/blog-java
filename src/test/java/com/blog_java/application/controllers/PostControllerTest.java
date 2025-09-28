@@ -61,7 +61,7 @@ public class PostControllerTest {
     void setup()
     {
 
-        user = new User("teste","teste","teste@teste.com","teste", UserRole.CLIENT);
+        user = new User("teste","teste","teste@teste.com","teste", UserRole.USER);
 
         postRegisterDto = new PostRegisterDto(1L,"teste","teste",null);
 
@@ -71,7 +71,7 @@ public class PostControllerTest {
 
         commentRegisterDto = new CommentRegisterDto(1L,"teste");
 
-        comment = new Comment(commentRegisterDto,post);
+        comment = new Comment(commentRegisterDto,post,user);
 
         comment.setId(1L);
 
@@ -138,7 +138,7 @@ public class PostControllerTest {
 
         postUpdated.setId(1L);
 
-        when(postService.UpdatePostById(eq(id), any(UpdatePostDto.class),any()))
+        when(postService.updatePostById(eq(id), any(UpdatePostDto.class),any()))
                 .thenReturn(post);
 
         // act
@@ -152,7 +152,7 @@ public class PostControllerTest {
                 .andExpect(jsonPath("$.id").value(id))
                 .andExpect(jsonPath("$.post").value("teste"));
 
-        verify(postService, times(1)).UpdatePostById(eq(id), any(UpdatePostDto.class),any());
+        verify(postService, times(1)).updatePostById(eq(id), any(UpdatePostDto.class),any());
     }
 
     @Test

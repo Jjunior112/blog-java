@@ -2,7 +2,7 @@ package com.blog_java.application.controllers;
 
 import com.blog_java.application.services.TokenService;
 import com.blog_java.application.services.UserService;
-import com.blog_java.domain.dtos.user.ClientRegisterDto;
+import com.blog_java.domain.dtos.user.UserRegisterDto;
 import com.blog_java.domain.dtos.user.JwtDto;
 import com.blog_java.domain.dtos.user.LoginDto;
 import com.blog_java.domain.dtos.user.UserListDto;
@@ -13,8 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/users")
@@ -47,9 +45,27 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<UserListDto> createCommonUser(@RequestBody @Valid ClientRegisterDto clientRegisterDto)
+    public ResponseEntity<UserListDto> createCommonUser(@RequestBody @Valid UserRegisterDto userRegisterDto)
     {
-        var response = userService.createClientUser(clientRegisterDto);
+        var response = userService.createUser(userRegisterDto);
+
+        return ResponseEntity.ok(new UserListDto(response));
+    }
+
+    @PostMapping("/registerAdmin")
+    @SecurityRequirement(name = "bearer-key")
+    public ResponseEntity<UserListDto> createCommonUserAdmin(@RequestBody @Valid UserRegisterDto userRegisterDto)
+    {
+        var response = userService.createUserAdmin(userRegisterDto);
+
+        return ResponseEntity.ok(new UserListDto(response));
+    }
+
+    @PostMapping("/registerModerator")
+    @SecurityRequirement(name = "bearer-key")
+    public ResponseEntity<UserListDto> createCommonUserModerator(@RequestBody @Valid UserRegisterDto userRegisterDto)
+    {
+        var response = userService.createUserModerator(userRegisterDto);
 
         return ResponseEntity.ok(new UserListDto(response));
     }

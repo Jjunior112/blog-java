@@ -21,10 +21,16 @@ public class Comment {
     @JsonIgnore
     private Post post;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    @JsonIgnore
+    private User user;
+
     private String comment;
 
-    public Comment(CommentRegisterDto commentRegisterDto, Post post) {
+    public Comment(CommentRegisterDto commentRegisterDto, Post post, User user) {
         this.comment = commentRegisterDto.comment();
         this.post = post;
+        this.user = user;
     }
 }
