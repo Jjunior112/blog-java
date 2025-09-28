@@ -33,7 +33,7 @@ public class PostService {
 
         User user = userService.findById(postRegisterDto.userId());
 
-        if(user.equals(null) || postRegisterDto.post().equals("") )
+        if(user == null || postRegisterDto.post() == "" )
         {
             throw new IllegalArgumentException();
         }
@@ -77,10 +77,8 @@ public class PostService {
     public Post updatePostById(Long id, UpdatePostDto updatePostDto, byte[] image) {
         Post post = findPostById(id);
 
-        // Usuário autenticado
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        // Permissões
         boolean isOwner = post.getUser().getId().equals(user.getId());
         boolean isAdmin = user.getRole().equals(UserRole.ADMIN);
         boolean isModerator = user.getRole().equals(UserRole.MODERATOR);
@@ -89,7 +87,6 @@ public class PostService {
             throw new AccessDeniedException("Você não tem permissão para atualizar este post.");
         }
 
-        // Atualizações condicionais
         if (updatePostDto.title() != null) {
             post.setTitle(updatePostDto.title());
         }
