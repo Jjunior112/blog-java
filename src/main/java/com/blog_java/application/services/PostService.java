@@ -35,7 +35,6 @@ public class PostService {
             throw new IllegalArgumentException();
         }
 
-
         Post post = new Post(postRegisterDto,user);
 
         if(image!=null)
@@ -49,7 +48,12 @@ public class PostService {
 
     public Page<Post> findAllPosts(Long userId, Pageable pagination)
     {
-        return postRepository.findAllByUserId(userId,pagination);
+        return postRepository.findAllByUserIdAndIsVerifiedTrue(userId,pagination);
+    }
+
+    public Page<Post> findAllPostsUnverified(Long userId, Pageable pagination)
+    {
+        return postRepository.findAllByUserIdAndIsVerifiedFalse(userId,pagination);
     }
 
     public Post findPostById(Long id)
@@ -92,6 +96,21 @@ public class PostService {
         }
 
         return postRepository.save(post);
+    }
+
+    @Transactional
+    public Post verifyPostById(Long id)
+    {
+        Post post = findPostById(id);
+
+        if (post.getIsVerified()) {
+            throw new IllegalStateException("O post já está verificado.");
+        }
+
+        post.setIsVerified(true);
+
+        return postRepository.save(post);
+
     }
 
     public void deletePost(Long id)

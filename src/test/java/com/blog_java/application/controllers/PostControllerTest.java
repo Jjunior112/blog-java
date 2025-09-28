@@ -61,7 +61,7 @@ public class PostControllerTest {
     void setup()
     {
 
-        user = new User("teste","teste","teste@teste.com","teste", UserRole.CLIENT);
+        user = new User("teste","teste","teste@teste.com","teste", UserRole.USER);
 
         postRegisterDto = new PostRegisterDto(1L,"teste","teste",null);
 

@@ -7,5 +7,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 
 public interface PostRepository extends JpaRepository<Post,Long> {
-    Page<Post> findAllByUserId(Long userId, Pageable pagination);
+
+    Page<Post> findAllByUserIdAndIsVerifiedTrue(Long userId, Pageable pagination);
+
+    Page<Post> findAllByUserIdAndIsVerifiedFalse(Long userId, Pageable pagination);
+
 }

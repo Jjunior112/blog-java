@@ -34,6 +34,8 @@ public class Post {
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments = new ArrayList<>();
 
+    private Boolean isVerified = false;
+
     public Post(PostRegisterDto postRegisterDto, User user) {
         this.user = user;
         this.title = postRegisterDto.title();

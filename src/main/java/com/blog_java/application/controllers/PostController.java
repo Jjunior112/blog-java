@@ -45,6 +45,14 @@ public class PostController {
         return ResponseEntity.ok(posts);
     }
 
+    @GetMapping("/pending")
+    public ResponseEntity<Page<PostListDto>> getAllPostUnverified(@RequestParam Long userId, @PageableDefault(size = 10, sort = {"title"}) Pageable pagination)
+    {
+        var posts = postService.findAllPostsUnverified(userId,pagination).map(PostListDto::new);
+
+        return ResponseEntity.ok(posts);
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<PostListDto> getPostById(@PathVariable Long id)
     {
@@ -58,6 +66,14 @@ public class PostController {
         byte[] imageBytes = (image!=null)? image.getBytes() : null;
 
         var post = postService.UpdatePostById(id,updatePostDto,imageBytes);
+
+        return ResponseEntity.ok(new PostListDto(post));
+    }
+
+    @PutMapping("/pending/{id}")
+    public ResponseEntity<PostListDto> verifyPost(@PathVariable Long id) {
+
+        var post = postService.verifyPostById(id);
 
         return ResponseEntity.ok(new PostListDto(post));
     }
