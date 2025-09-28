@@ -36,7 +36,7 @@ public class CommentService {
     @Transactional
     public Comment createComment(CommentRegisterDto commentRegisterDto)
     {
-        if(commentRegisterDto.postId().equals("") || commentRegisterDto.comment().equals(""))
+        if(commentRegisterDto.postId() == null || commentRegisterDto.comment().equals(""))
         {
             throw new IllegalArgumentException();
         }
