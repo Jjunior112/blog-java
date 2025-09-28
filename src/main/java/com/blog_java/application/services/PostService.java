@@ -2,11 +2,14 @@ package com.blog_java.application.services;
 
 import com.blog_java.domain.dtos.post.PostRegisterDto;
 import com.blog_java.domain.dtos.post.UpdatePostDto;
+import com.blog_java.domain.enums.UserRole;
 import com.blog_java.domain.models.Post;
 import com.blog_java.domain.models.User;
 import com.blog_java.infra.repositories.PostRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -71,27 +74,35 @@ public class PostService {
     }
 
     @Transactional
-    public Post UpdatePostById(Long id, UpdatePostDto updatePostDto,byte[] image)
-    {
+    public Post updatePostById(Long id, UpdatePostDto updatePostDto, byte[] image) {
         Post post = findPostById(id);
 
-        if(updatePostDto.title()!=null)
-        {
+        // Usuário autenticado
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        // Permissões
+        boolean isOwner = post.getUser().getId().equals(user.getId());
+        boolean isAdmin = user.getRole().equals(UserRole.ADMIN);
+        boolean isModerator = user.getRole().equals(UserRole.MODERATOR);
+
+        if (!isOwner && !isAdmin && !isModerator) {
+            throw new AccessDeniedException("Você não tem permissão para atualizar este post.");
+        }
+
+        // Atualizações condicionais
+        if (updatePostDto.title() != null) {
             post.setTitle(updatePostDto.title());
         }
 
-        if(updatePostDto.post()!=null)
-        {
+        if (updatePostDto.post() != null) {
             post.setPost(updatePostDto.post());
         }
 
-        if(updatePostDto.imageBase64()!=null)
-        {
+        if (updatePostDto.imageBase64() != null) {
             post.setImage(updatePostDto.imageBase64());
         }
 
-        if(image !=null)
-        {
+        if (image != null) {
             post.setImage(image);
         }
 
@@ -113,9 +124,20 @@ public class PostService {
 
     }
 
+    @Transactional
     public void deletePost(Long id)
     {
         Post post = findPostById(id);
+
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        boolean isOwner = post.getUser().getId().equals(user.getId());
+        boolean isAdmin = user.getRole().equals( UserRole.ADMIN);
+        boolean isModerator = user.getRole().equals( UserRole.MODERATOR);
+
+        if (!isOwner && !isAdmin && !isModerator) {
+            throw new AccessDeniedException("Você não tem permissão para excluir este post.");
+        }
 
         postRepository.delete(post);
     }
