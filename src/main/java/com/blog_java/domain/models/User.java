@@ -43,6 +43,9 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private UserRole role;
 
+
+    public boolean isEnabled = false;
+
     boolean isActive = true;
 
     public User(String firstName, String lastName,String email, String password, UserRole role) {
@@ -89,6 +92,6 @@ public class User implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return this.isActive;
+        return this.isEnabled;
     }
 }

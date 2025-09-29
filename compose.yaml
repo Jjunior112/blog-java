@@ -1,4 +1,10 @@
 services:
+    mailcatcher:
+      image: schickling/mailcatcher
+      container_name: mailcatcher
+      ports:
+        - "1080:1080" # Interface web
+        - "1025:1025" # SMTP fake
 
     blog-java:
         build:

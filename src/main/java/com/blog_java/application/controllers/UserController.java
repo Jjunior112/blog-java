@@ -2,10 +2,7 @@ package com.blog_java.application.controllers;
 
 import com.blog_java.application.services.TokenService;
 import com.blog_java.application.services.UserService;
-import com.blog_java.domain.dtos.user.UserRegisterDto;
-import com.blog_java.domain.dtos.user.JwtDto;
-import com.blog_java.domain.dtos.user.LoginDto;
-import com.blog_java.domain.dtos.user.UserListDto;
+import com.blog_java.domain.dtos.user.*;
 import com.blog_java.domain.models.User;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
@@ -68,6 +65,14 @@ public class UserController {
         var response = userService.createUserModerator(userRegisterDto);
 
         return ResponseEntity.ok(new UserListDto(response));
+    }
+
+    @GetMapping("/confirm")
+    public ResponseEntity<AccountConfirmDto> confirmUser(@RequestParam String token)
+    {
+        var user = userService.confirmUser(token);
+
+        return ResponseEntity.ok(new AccountConfirmDto("Bem vindo," + user.getFirstName() + "! Conta confirmada com sucesso!"));
     }
 
     @GetMapping("/{id}")
