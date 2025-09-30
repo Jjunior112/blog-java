@@ -7,25 +7,19 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
-    @Configuration
+@Configuration
+@Profile("prod")
 public class EmailConfig {
 
-    //@Value("${api.security.sendGridApiKey}")
-    //private String sendGridApiKey;
-    //@Value("${api.security.from}")
-    //private String from;
+    @Value("${api.security.sendGridApiKey}")
+    private String sendGridApiKey;
+    @Value("${api.security.from}")
+    private String from;
 
-    //@Bean
-    //@Profile("prod")
-    //public EmailSender emailSender(){
-    //    String apiKey = sendGridApiKey;
-    //    return new SendGridEmailSender(apiKey,from);
-    //}
     @Bean
-    //@Profile("dev")
-    public EmailSender devEmailSender() {
-
-        return new SmtpEmailSender("localhost", 1025);
+    public EmailSender emailSender(){
+        String apiKey = sendGridApiKey;
+        return new SendGridEmailSender(apiKey,from);
     }
 
 }

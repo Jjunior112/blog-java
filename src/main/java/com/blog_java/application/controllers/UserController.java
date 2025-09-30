@@ -5,6 +5,7 @@ import com.blog_java.application.services.UserService;
 import com.blog_java.domain.dtos.user.*;
 import com.blog_java.domain.models.User;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -18,11 +19,13 @@ public class UserController {
     private final UserService userService;
     private final TokenService tokenService;
     private final AuthenticationManager authenticationManager;
+    private final HttpServletRequest httpServletRequest;
 
-    public UserController(UserService userService, TokenService tokenService, AuthenticationManager authenticationManager) {
+    public UserController(UserService userService, TokenService tokenService, AuthenticationManager authenticationManager, HttpServletRequest httpServletRequest) {
         this.userService = userService;
         this.tokenService = tokenService;
         this.authenticationManager = authenticationManager;
+        this.httpServletRequest = httpServletRequest;
     }
 
     @PostMapping("/login")
@@ -44,14 +47,16 @@ public class UserController {
     @PostMapping("/register")
     public ResponseEntity<UserListDto> createCommonUser(@RequestBody @Valid UserRegisterDto userRegisterDto)
     {
-        var response = userService.createUser(userRegisterDto);
+        String baseUrl = httpServletRequest.getRequestURL().toString().replace("/users/register", "");
+
+        var response = userService.createUser(userRegisterDto,baseUrl);
 
         return ResponseEntity.ok(new UserListDto(response));
     }
 
     @PostMapping("/registerAdmin")
     @SecurityRequirement(name = "bearer-key")
-    public ResponseEntity<UserListDto> createCommonUserAdmin(@RequestBody @Valid UserRegisterDto userRegisterDto)
+    public ResponseEntity<UserListDto> createUserAdmin(@RequestBody @Valid UserRegisterDto userRegisterDto)
     {
         var response = userService.createUserAdmin(userRegisterDto);
 
@@ -60,9 +65,11 @@ public class UserController {
 
     @PostMapping("/registerModerator")
     @SecurityRequirement(name = "bearer-key")
-    public ResponseEntity<UserListDto> createCommonUserModerator(@RequestBody @Valid UserRegisterDto userRegisterDto)
+    public ResponseEntity<UserListDto> createUserModerator(@RequestBody @Valid UserRegisterDto userRegisterDto)
     {
-        var response = userService.createUserModerator(userRegisterDto);
+        String baseUrl = httpServletRequest.getRequestURL().toString().replace("/users/register", "");
+
+        var response = userService.createUserModerator(userRegisterDto,baseUrl);
 
         return ResponseEntity.ok(new UserListDto(response));
     }

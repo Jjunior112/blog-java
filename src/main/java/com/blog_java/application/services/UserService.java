@@ -7,7 +7,6 @@ import com.blog_java.domain.models.User;
 import com.blog_java.domain.ports.EmailSender;
 import com.blog_java.infra.repositories.ConfirmationTokenRepository;
 import com.blog_java.infra.repositories.UserRepository;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -28,8 +27,7 @@ public class UserService implements UserDetailsService {
     private PasswordEncoder passwordEncoder;
 
     private final EmailSender emailSender;
-    @Value("${app.base-url}")
-    private String baseUrl;
+
 
     public UserService(EmailSender emailSender, PasswordEncoder passwordEncoder, ConfirmationTokenRepository confirmationTokenRepository, UserRepository userRepository) {
         this.emailSender = emailSender;
@@ -44,7 +42,7 @@ public class UserService implements UserDetailsService {
     }
 
     @Transactional
-    public User createUser(UserRegisterDto userRegisterDto)
+    public User createUser(UserRegisterDto userRegisterDto,String baseUrl)
     {
         if(userRepository.findByEmail(userRegisterDto.email() )!= null)
         {
@@ -92,7 +90,7 @@ public class UserService implements UserDetailsService {
     }
 
     @Transactional
-    public User createUserModerator(UserRegisterDto userRegisterDto)
+    public User createUserModerator(UserRegisterDto userRegisterDto,String baseUrl)
     {
         if(userRepository.findByEmail(userRegisterDto.email() )!= null)
         {
