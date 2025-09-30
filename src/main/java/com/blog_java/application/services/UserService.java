@@ -86,6 +86,8 @@ public class UserService implements UserDetailsService {
 
         User user = new User(userRegisterDto.firstName(), userRegisterDto.lastName(), userRegisterDto.email(),encryptedPassword, UserRole.ADMIN);
 
+        user.setEnabled(true);
+
         return userRepository.save(user);
     }
 
@@ -132,7 +134,7 @@ public class UserService implements UserDetailsService {
 
         User user = confirmationToken.getUser();
 
-        if(user.isEnabled())
+        if(user.enabled)
         {
             throw new IllegalArgumentException("Conta já está verificada!");
         }
@@ -161,8 +163,4 @@ public class UserService implements UserDetailsService {
 
         return user != null;
     }
-
-
-
-
 }
