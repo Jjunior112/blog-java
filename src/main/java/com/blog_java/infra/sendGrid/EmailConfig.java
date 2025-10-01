@@ -1,7 +1,6 @@
     package com.blog_java.infra.sendGrid;
 
 import com.blog_java.domain.ports.EmailSender;
-import com.blog_java.infra.mailCatcher.SmtpEmailSender;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
