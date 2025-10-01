@@ -7,6 +7,7 @@ import com.blog_java.domain.enums.UserRole;
 import com.blog_java.domain.models.Comment;
 import com.blog_java.domain.models.Post;
 import com.blog_java.domain.models.User;
+import com.blog_java.domain.ports.EmailSender;
 import com.blog_java.infra.repositories.PostRepository;
 import com.blog_java.infra.repositories.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,6 +16,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -30,6 +32,9 @@ public class PostServiceTest {
 
     @Mock
     private PostRepository postRepository;
+
+    @MockBean
+    private EmailSender emailSender;
 
     @Mock
     private UserService userService;

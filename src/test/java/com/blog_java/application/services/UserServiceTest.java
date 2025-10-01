@@ -100,7 +100,7 @@ class UserServiceTest {
     @DisplayName("Deveria confirmar a conta do usuário corretamente")
     void confirmUserCase1() {
         // Arrange
-    User user = new User("Teste", "teste", "teste@teste.com", "encoded", UserRole.USER);
+        User user = new User("Teste", "teste", "teste@teste.com", "encoded", UserRole.USER);
         user.setId(1L);
         user.setEnabled(false);
 
