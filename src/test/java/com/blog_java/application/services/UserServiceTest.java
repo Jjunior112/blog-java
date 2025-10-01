@@ -60,7 +60,7 @@ class UserServiceTest {
         when(userRepository.save(any(User.class))).thenReturn(savedUser);
 
         // Act
-        User result = userService.createUser(dto);
+        User result = userService.createUser(dto,"http://localhost:8080");
 
         // Assert
         assertNotNull(result);
@@ -86,7 +86,7 @@ class UserServiceTest {
         // Act & Assert
         IllegalArgumentException exception = assertThrows(
                 IllegalArgumentException.class,
-                () -> userService.createUser(dto)
+                () -> userService.createUser(dto,"http://localhost:8080")
         );
 
         assertEquals("E-mail already exists", exception.getMessage());
@@ -100,7 +100,7 @@ class UserServiceTest {
     @DisplayName("Deveria confirmar a conta do usuário corretamente")
     void confirmUserCase1() {
         // Arrange
-    User user = new User("Teste", "teste", "teste@teste.com", "encoded", UserRole.USER);
+        User user = new User("Teste", "teste", "teste@teste.com", "encoded", UserRole.USER);
         user.setId(1L);
         user.setEnabled(false);
 

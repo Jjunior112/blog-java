@@ -44,7 +44,7 @@ public class User implements UserDetails {
     private UserRole role;
 
 
-    public boolean isEnabled = false;
+    public boolean enabled = false;
 
     boolean isActive = true;
 
@@ -92,6 +92,6 @@ public class User implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return this.isEnabled;
+        return this.enabled;
     }
 }

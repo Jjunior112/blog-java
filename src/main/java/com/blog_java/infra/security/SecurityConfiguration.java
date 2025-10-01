@@ -30,7 +30,7 @@ public class SecurityConfiguration {
                                 .requestMatchers(HttpMethod.POST, "/users/login","/users/register").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/v3/api-docs/**", "/swagger-ui.html", "/swagger-ui/**","/users/confirm").permitAll()
                                 .requestMatchers(HttpMethod.POST, "/users/registerAdmin","/users/registerModerator").hasRole(UserRole.ADMIN.name())
-                                .requestMatchers(HttpMethod.GET, "/users").hasRole(UserRole.ADMIN.name())
+                                .requestMatchers(HttpMethod.GET, "/status").hasRole(UserRole.ADMIN.name())
                                 .requestMatchers(HttpMethod.PUT, "/post/pending/**").hasAnyRole(UserRole.ADMIN.name(),UserRole.MODERATOR.name())
                                 .requestMatchers(HttpMethod.GET, "/post/pending/**").hasAnyRole(UserRole.ADMIN.name(),UserRole.MODERATOR.name())
                                 .requestMatchers(HttpMethod.DELETE, "/users").hasRole(UserRole.ADMIN.name())

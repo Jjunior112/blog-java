@@ -10,6 +10,7 @@ import com.blog_java.domain.enums.UserRole;
 import com.blog_java.domain.models.Comment;
 import com.blog_java.domain.models.Post;
 import com.blog_java.domain.models.User;
+import com.blog_java.domain.ports.EmailSender;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -39,6 +40,10 @@ public class PostControllerTest {
     private ObjectMapper objectMapper;
     @MockBean
     private PostService postService;
+
+    @MockBean
+
+    private EmailSender emailSender;
 
     // beans necessários para o Security Filter
     @MockBean

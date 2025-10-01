@@ -15,7 +15,7 @@ import java.io.IOException;
 public class SendGridEmailSender implements EmailSender {
     private final SendGrid sendGrid;
 
-    //@Value("${api.security.from}")
+    @Value("${api.security.from}")
     private final String from;
 
     public SendGridEmailSender(String apiKey, String from) {
