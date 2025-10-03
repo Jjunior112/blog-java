@@ -1,5 +1,6 @@
 package com.blog_java.application.controllers;
 
+import com.blog_java.application.controllers.v1.CommentController;
 import com.blog_java.application.services.CommentService;
 import com.blog_java.application.services.TokenService;
 import com.blog_java.application.services.UserService;
@@ -95,7 +96,7 @@ public class CommentControllerTest {
 
         //act
 
-        var result = mvc.perform(post("/comment")
+        var result = mvc.perform(post("/api/v1/comments")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(commentRegisterDto)));
         //assert
@@ -114,7 +115,7 @@ public class CommentControllerTest {
 
         //act
 
-        var result = mvc.perform(post("/comment")
+        var result = mvc.perform(post("/api/v1/comments")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(errorDto)));
         //assert
@@ -133,7 +134,7 @@ public class CommentControllerTest {
         doNothing().when(commentService).deleteComment(id);
 
         // act
-        var result = mvc.perform(delete("/comment/{id}", id)
+        var result = mvc.perform(delete("/api/v1/comments/{id}", id)
                 .contentType(MediaType.APPLICATION_JSON));
 
         // assert

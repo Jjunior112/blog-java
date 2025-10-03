@@ -46,11 +46,10 @@ class UserServiceTest {
     }
 
     @Test
-    @DisplayName("Deveria criar o usuário corretamente e enviar e-mail de confirmação de conta")
-    void createUserCase1() {
+    @DisplayName("Deveria criar o usuário comum corretamente e enviar e-mail de confirmação de conta")
+    void createCommonUserCase1() {
         // Arrange
         UserRegisterDto dto = new UserRegisterDto("Teste", "teste", "teste@teste.com", "123456");
-
 
         when(passwordEncoder.encode(dto.password())).thenReturn("encoded-password");
 
@@ -72,8 +71,8 @@ class UserServiceTest {
     }
 
     @Test
-    @DisplayName("Não deveria criar o usuário com e-mail duplicado")
-    void createUserCase2() {
+    @DisplayName("Não deveria criar comum o usuário com e-mail duplicado")
+    void createCommonUserCase2() {
         // Arrange
         UserRegisterDto dto = new UserRegisterDto("Teste", "teste", "teste@teste.com", "123456");
 
@@ -87,6 +86,106 @@ class UserServiceTest {
         IllegalArgumentException exception = assertThrows(
                 IllegalArgumentException.class,
                 () -> userService.createUser(dto,"http://localhost:8080")
+        );
+
+        assertEquals("E-mail already exists", exception.getMessage());
+
+        // Verifica que NÃO chegou a salvar nem enviar e-mail
+        verify(userRepository, never()).save(any(User.class));
+        verify(confirmationTokenRepository, never()).save(any(ConfirmationToken.class));
+        verify(emailSender, never()).sendEmail(anyString(), anyString(), anyString());
+    }
+
+    @Test
+    @DisplayName("Deveria criar o usuário moderador corretamente e enviar e-mail de confirmação de conta")
+    void createModeratorUserCase1() {
+        // Arrange
+        UserRegisterDto dto = new UserRegisterDto("Teste", "teste", "teste@teste.com", "123456");
+
+        when(passwordEncoder.encode(dto.password())).thenReturn("encoded-password");
+
+        User savedUser = new User(dto.firstName(), dto.lastName(), dto.email(), "encoded-password", UserRole.MODERATOR);
+        savedUser.setId(1L);
+
+        when(userRepository.save(any(User.class))).thenReturn(savedUser);
+
+        // Act
+        User result = userService.createUserModerator(dto,"http://localhost:8080");
+
+        // Assert
+        assertNotNull(result);
+        assertEquals(dto.email(), result.getEmail());
+        verify(userRepository).findByEmail(dto.email());
+        verify(userRepository).save(any(User.class));
+        verify(confirmationTokenRepository).save(any(ConfirmationToken.class));
+        verify(emailSender).sendEmail(eq(dto.email()), anyString(), contains("/users/confirm?token="));
+    }
+
+    @Test
+    @DisplayName("Não deveria criar o usuário moderador com e-mail duplicado")
+    void createModeratorUserCase2() {
+        // Arrange
+        UserRegisterDto dto = new UserRegisterDto("Teste", "teste", "teste@teste.com", "123456");
+
+        // Simula que o usuário já existe no banco
+        User existingUser = new User(dto.firstName(), dto.lastName(), dto.email(), "encoded-password", UserRole.MODERATOR);
+        existingUser.setId(99L);
+
+        when(userRepository.findByEmail(dto.email())).thenReturn(existingUser);
+
+        // Act & Assert
+        IllegalArgumentException exception = assertThrows(
+                IllegalArgumentException.class,
+                () -> userService.createUserModerator(dto,"http://localhost:8080")
+        );
+
+        assertEquals("E-mail already exists", exception.getMessage());
+
+        // Verifica que NÃO chegou a salvar nem enviar e-mail
+        verify(userRepository, never()).save(any(User.class));
+        verify(confirmationTokenRepository, never()).save(any(ConfirmationToken.class));
+        verify(emailSender, never()).sendEmail(anyString(), anyString(), anyString());
+    }
+
+    @Test
+    @DisplayName("Deveria criar o usuário admin corretamente e enviar e-mail de confirmação de conta")
+    void createAdminUserCase1() {
+        // Arrange
+        UserRegisterDto dto = new UserRegisterDto("Teste", "teste", "teste@teste.com", "123456");
+
+        when(passwordEncoder.encode(dto.password())).thenReturn("encoded-password");
+
+        User savedUser = new User(dto.firstName(), dto.lastName(), dto.email(), "encoded-password", UserRole.ADMIN);
+        savedUser.setId(1L);
+
+        when(userRepository.save(any(User.class))).thenReturn(savedUser);
+
+        // Act
+        User result = userService.createUserAdmin(dto);
+
+        // Assert
+        assertNotNull(result);
+        assertEquals(dto.email(), result.getEmail());
+        verify(userRepository).findByEmail(dto.email());
+        verify(userRepository).save(any(User.class));
+    }
+
+    @Test
+    @DisplayName("Não deveria criar o usuário admin com e-mail duplicado")
+    void createAdminUserCase2() {
+        // Arrange
+        UserRegisterDto dto = new UserRegisterDto("Teste", "teste", "teste@teste.com", "123456");
+
+        // Simula que o usuário já existe no banco
+        User existingUser = new User(dto.firstName(), dto.lastName(), dto.email(), "encoded-password", UserRole.ADMIN);
+        existingUser.setId(99L);
+
+        when(userRepository.findByEmail(dto.email())).thenReturn(existingUser);
+
+        // Act & Assert
+        IllegalArgumentException exception = assertThrows(
+                IllegalArgumentException.class,
+                () -> userService.createUserAdmin(dto)
         );
 
         assertEquals("E-mail already exists", exception.getMessage());

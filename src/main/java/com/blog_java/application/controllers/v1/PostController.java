@@ -1,4 +1,4 @@
-package com.blog_java.application.controllers;
+package com.blog_java.application.controllers.v1;
 
 import com.blog_java.application.services.PostService;
 import com.blog_java.domain.dtos.post.PostListDto;
@@ -17,7 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 
 @RestController
-@RequestMapping("/post")
+@RequestMapping("/api/v1/posts")
 @SecurityRequirement(name = "bearer-key")
 public class PostController {
 

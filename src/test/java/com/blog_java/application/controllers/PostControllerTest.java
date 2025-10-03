@@ -1,5 +1,6 @@
 package com.blog_java.application.controllers;
 
+import com.blog_java.application.controllers.v1.PostController;
 import com.blog_java.application.services.PostService;
 import com.blog_java.application.services.TokenService;
 import com.blog_java.application.services.UserService;
@@ -94,7 +95,7 @@ public class PostControllerTest {
                 .thenReturn(post);
 
         // act
-        var result = mvc.perform(multipart("/post")
+        var result = mvc.perform(multipart("/api/v1/posts")
                 .param("userId","1")
                 .param("title", postRegisterDto.title())
                 .param("post", postRegisterDto.post())
@@ -118,7 +119,7 @@ public class PostControllerTest {
 
         // act
 
-        var result = mvc.perform(multipart("/post")
+        var result = mvc.perform(multipart("/api/v1/posts")
                 .param("userId","")
                 .param("title", errorDto.title())
                 .param("post", errorDto.post())
@@ -147,7 +148,7 @@ public class PostControllerTest {
                 .thenReturn(post);
 
         // act
-        var result = mvc.perform(multipart("/post/{id}",id)
+        var result = mvc.perform(multipart("/api/v1/posts/{id}",id)
                 .param("title", updatePostDto.title())
                 .param("post", updatePostDto.post())
                 .with(request -> { request.setMethod("PUT"); return request; }) // forçar PUT
@@ -170,7 +171,7 @@ public class PostControllerTest {
         doNothing().when(postService).deletePost(id);
 
         // act
-        var result = mvc.perform(delete("/post/{id}", id)
+        var result = mvc.perform(delete("/api/v1/posts/{id}", id)
                 .contentType(MediaType.APPLICATION_JSON));
 
         // assert
