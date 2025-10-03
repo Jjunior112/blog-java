@@ -10,10 +10,15 @@ import org.springframework.context.annotation.Profile;
     @Configuration
     @Profile("dev")
     public class DevEmailConfig {
+        @Value("${spring.mail.host}")
+        private String mailHost;
+
+        @Value("${spring.mail.port}")
+        private Integer mailPort;
 
         @Bean
         public EmailSender devEmailSender() {
-            return new SmtpEmailSender("localhost", 1025);
+            return new SmtpEmailSender(mailHost, mailPort);
         }
 
     }

@@ -1,36 +1,44 @@
 services:
-    mailcatcher:
-      image: schickling/mailcatcher
-      container_name: mailcatcher
-      ports:
-        - "1080:1080" # Interface web
-        - "1025:1025" # SMTP fake
+  mailcatcher:
+    image: schickling/mailcatcher
+    container_name: mailcatcher
+    ports:
+      - "1080:1080" # Interface web
+      - "1025:1025" # SMTP fake
+    networks:
+      - backend
+  blog-java:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: blog-java
+    ports:
+      - "8080:8080"
+    networks:
+      - backend
+    depends_on:
+      - postgres
+    env_file:
+      - .env.development
+    restart: unless-stopped
 
-    blog-java:
-        build:
-          context: .
-          dockerfile: Dockerfile
-        container_name: blog-java
-        ports:
-          - 8080:8080
-        networks:
-          - backend
-        depends_on:
-          - mongodb
-        env_file:
-          - .env.development
-        restart: unless-stopped
-    mongodb:
-        image: mongo
-        ports:
-          - 27017:27017
-        env_file:
-          - .env.development
-        environment:
-          - MONGO_INITDB_ROOT_USERNAME=${MONGO_USERNAME}
-          - MONGO_INITDB_ROOT_PASSWORD=${MONGO_PASSWORD}
-        networks:
-          - backend
+  postgres:
+    image: postgres:15
+    container_name: postgres
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=${DATABASE_NAME}
+      - POSTGRES_USER=${DATABASE_USERNAME}
+      - POSTGRES_PASSWORD=${DATABASE_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - backend
+
 networks:
   backend:
     driver: bridge
+
+volumes:
+  postgres_data:
