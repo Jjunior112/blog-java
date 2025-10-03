@@ -1,4 +1,4 @@
-package com.blog_java.application.controllers;
+package com.blog_java.application.controllers.v1;
 
 import com.blog_java.application.services.CommentService;
 import com.blog_java.domain.dtos.comment.CommentListDto;
@@ -14,7 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/comment")
+@RequestMapping("/api/v1/comments")
 @SecurityRequirement(name = "bearer-key")
 public class CommentController {
     private final CommentService commentService;

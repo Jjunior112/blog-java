@@ -1,4 +1,4 @@
-package com.blog_java.application.controllers;
+package com.blog_java.application.controllers.v1;
 
 import com.blog_java.application.services.TokenService;
 import com.blog_java.application.services.UserService;
@@ -13,7 +13,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/api/v1/users")
 public class UserController {
 
     private final UserService userService;
@@ -67,7 +67,7 @@ public class UserController {
     @SecurityRequirement(name = "bearer-key")
     public ResponseEntity<UserListDto> createUserModerator(@RequestBody @Valid UserRegisterDto userRegisterDto)
     {
-        String baseUrl = httpServletRequest.getRequestURL().toString().replace("/users/register", "");
+        String baseUrl = httpServletRequest.getRequestURL().toString().replace("/users/registerModerator", "");
 
         var response = userService.createUserModerator(userRegisterDto,baseUrl);
 
